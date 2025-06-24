@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chúc chúc chúc</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #fceabb, #8deabd);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Quicksand', monospace;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #password-screen {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.5s;
+    }
+
+    #message-screen {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s;
+    }
+
+
+    #letter-box {
+        width: 400px;
+        height: 700px;
+        padding: 30px;
+        background: transparent;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        color: #333;
+        line-height: 1.6;
+    }
+
+
+    #password-screen input {
+      padding: 10px 15px;
+      font-size: 18px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #password-screen button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #93adee;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #error-msg {
+      color: red;
+      margin-top: 10px;
+      height: 20px;
+    }
+
+    #typing-text {
+      font-size: 12px;
+      padding: 20px;
+      max-width: 90%;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Màn hình nhập mật khẩu -->
+  <div id="password-screen">
+    <h2>Nhập mật khẩu để xem lời chúc 🎁</h2>
+    <input type="password" id="password-input" placeholder="Nhập mật khẩu..." />
+    <button onclick="checkPassword()">Vào xem</button>
+    <div id="error-msg"></div>
+  </div>
+
+  <!-- Màn hình lời chúc -->
+  <div id="message-screen" class="hidden">
+    <div id="letter-box">
+        <div id="typing-text"></div>
+      </div>
+      
+
+  <script>
+    const correctPassword = "buihuong"; // bạn có thể đổi mật khẩu ở đây
+    const message = 
+`To: chị gái xịn xò, chuyên gia tâm lý kiêm "máy phát lời khuyên" của em,
+
+Sắp tới là lúc chị trổ tài “học bá ẩn danh” rồi đó nha! Chúc chị thi đâu trúng đó, đề nào cũng phải chào thua chị luôn!
+Mong chị vô phòng thi với trái tim vững như cách chị dỗ em qua từng lần khủng hoảng tuổi teen:>>>
+Não chị đã nạp đủ kiến thức, còn tim em thì nạp đầy niềm tin vào chị nè,thi xong nhớ truyền thêm “năng lượng khôn ngoan” cho đời em nữa nha, em còn cần chị dài dài á!
+
+Chốt lại là: thi tốt, ngủ đủ, ăn ngon, đậu cái rụp và... bao em trà sữa vì em cute thế này cơ mà 😜
+
+
+From: ngkhuyn`;
+
+    const typingSpeed = 50;
+    let i = 0;
+
+    function checkPassword() {
+      const input = document.getElementById("password-input").value;
+      const errorMsg = document.getElementById("error-msg");
+      if (input === correctPassword) {
+        document.getElementById("password-screen").style.display = "none";
+        const messageScreen = document.getElementById("message-screen");
+        messageScreen.style.display = "flex";
+        messageScreen.style.background = "url('bg2.jpg') center/contain no-repeat";
+        messageScreen.style.backgroundColor = "#fffefc";
+
+        // Ẩn màn hình mật khẩu, hiện lời chúc
+        document.getElementById("password-screen").style.display = "none";
+        document.getElementById("message-screen").classList.remove("hidden");
+        typeWriter();
+      } else {
+        errorMsg.textContent = "Sai mật khẩu rồi 😢";
+      }
+    }
+
+    function typeWriter() {
+      if (i < message.length) {
+        const char = message.charAt(i);
+        document.getElementById("typing-text").innerHTML += (char === '\n') ? '<br>' : char;
+
+        i++;
+        setTimeout(typeWriter, typingSpeed);
+      }
+    }
+  </script>
+</body>
+</html>
