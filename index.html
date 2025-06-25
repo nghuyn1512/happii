@@ -18,6 +18,7 @@
       justify-content: center;
       align-items: center;
       font-family: 'Quicksand', monospace;
+      overflow: hidden;
     }
 
     .hidden {
@@ -48,7 +49,7 @@
 
 
     #letter-box {
-        width: 400px;
+        width: 450px;
         height: 700px;
         padding: 30px;
         background: transparent;
@@ -57,6 +58,7 @@
         font-family: 'Courier New', monospace;
         color: #333;
         line-height: 1.6;
+        overflow-y: auto;
     }
 
 
@@ -95,15 +97,13 @@
 </head>
 <body>
 
-  <!-- Màn hình nhập mật khẩu -->
   <div id="password-screen">
     <h2>Nhập mật khẩu để xem lời chúc 🎁</h2>
     <input type="password" id="password-input" placeholder="Nhập mật khẩu..." />
-    <button onclick="checkPassword()">Vào xem</button>
+    <button onclick="checkpass()">Vào xem</button>
     <div id="error-msg"></div>
   </div>
 
-  <!-- Màn hình lời chúc -->
   <div id="message-screen" class="hidden">
     <div id="letter-box">
         <div id="typing-text"></div>
@@ -111,8 +111,9 @@
       
 
   <script>
-    const correctPassword = "buihuong"; // bạn có thể đổi mật khẩu ở đây
-    const message = 
+    const data ={
+      "buihuong":{
+        message:
 `To: chị gái xịn xò, chuyên gia tâm lý kiêm "máy phát lời khuyên" của em,
 
 Sắp tới là lúc chị trổ tài “học bá ẩn danh” rồi đó nha! Chúc chị thi đâu trúng đó, đề nào cũng phải chào thua chị luôn!
@@ -122,37 +123,71 @@ Não chị đã nạp đủ kiến thức, còn tim em thì nạp đầy niềm 
 Chốt lại là: thi tốt, ngủ đủ, ăn ngon, đậu cái rụp và... bao em trà sữa vì em cute thế này cơ mà 😜
 
 
-From: ngkhuyn`;
+From: ngkhuyn`,
+        background: "bg2.jpg"
+    },
+    "cqo":{
+      message: `
+        To: các anh chị 2k7 iu của nhà c,
 
-    const typingSpeed = 50;
+        Vậy là ngày mai các anh chị chính thức "ra trận", chinh chiến kì thi kết thúc quãng đời học sinh của mình rồi. Cá nhân em xin chúc các anh chị bình tĩnh - tự tin - chiến thắng!!
+        Mong rằng những bài toán thực tế VDC, những câu phương trình hóa học "khó nhằn", những câu phả hệ trong Sinh học, những câu VDC của Vật Lí hay những bài đọc hiểu tiếng Anh "khó đoán" không là gì với anh chị cả. 
+        À mà anh chị nhớ mang theo ô hay áo mưa nha, nghe dự báo thời tiết báo 2 ngày tới có mưa á, mà kể cả không có mưa thì cũng nắng mà đúng hông:))) đem ô đi che nắng thì k bị say nắng nè, còn mưa thì không bị ướt lại ốm ra:((
+        Cuối cùng, chúc anh chị đạt điểm cao và đỗ NV1 như ý mình nhé!
+
+        From: ngkhuyn. 
+      `,
+      background: "bg2.jpg",
+      music: "phep_mau.mp3"
+    },
+    "1345678": {
+      message: `
+      hê lô a,
+
+      Vậy là mai thi tốt nghiệp rồi 😁 Chúc anh vào phòng thi nhẹ nhàng như không, ra khỏi phòng thi nhẹ lòng như mây:)).
+      Văn 6.75 hoặc hơn thế là "đẹp trai level quốc dân" rồi, còn 3 môn kia chắc cũng xử đẹp hết nhỉ=)). Không học dữ như bao người khác mà chill chill thì làm bài cũng vậy nghenn 😗.
+      À mà nhớ mang ô hay áo mưa theo nha, thời tiết báo 2 ngày tới có mưa, mang đi kẻo ướt người ốm lại mệt, còn ko mưa thì che nắng =)) 
+      Anyway chúc 3 môn kia đều trên 3 như ý anh, dù chỉ cần tốt nghiệp thoai nhưng tốt nghiệp theo cách "ngầy ngầy" thì vẫn hơn nhẻ 🤓. 
+      
+      From: ngkhuyn:D
+     `,
+      background: "bg2.jpg"
+    }
+  };
+    const speed = 50;
     let i = 0;
-
-    function checkPassword() {
-      const input = document.getElementById("password-input").value;
+    let current_message = "";
+    
+    function checkpass() {
+      const input = document.getElementById("password-input").value.trim();
       const errorMsg = document.getElementById("error-msg");
-      if (input === correctPassword) {
+      if (data[input]) {
+        const message_data = data[input];
+        current_message = message_data.message;
         document.getElementById("password-screen").style.display = "none";
-        const messageScreen = document.getElementById("message-screen");
-        messageScreen.style.display = "flex";
-        messageScreen.style.background = "url('bg2.jpg') center/contain no-repeat";
-        messageScreen.style.backgroundColor = "#fffefc";
+        const msg = document.getElementById("message-screen");
+        msg.style.display = "flex";
+        msg.style.background = `url('${message_data.background}') center/contain no-repeat`;
+        msg.style.backgroundColor = "#fffefc";
+        document.getElementById("typing-text").innerHTML ="";
+        i = 0;
+        typewriter();
 
-        // Ẩn màn hình mật khẩu, hiện lời chúc
-        document.getElementById("password-screen").style.display = "none";
-        document.getElementById("message-screen").classList.remove("hidden");
-        typeWriter();
+        const audio = new Audio(message_data.music);
+        audio.play();
+        audio.loop = true;
       } else {
         errorMsg.textContent = "Sai mật khẩu rồi 😢";
       }
     }
 
-    function typeWriter() {
-      if (i < message.length) {
-        const char = message.charAt(i);
+    function typewriter() {
+      if (i < current_message.length) {
+        const char = current_message.charAt(i);
         document.getElementById("typing-text").innerHTML += (char === '\n') ? '<br>' : char;
 
         i++;
-        setTimeout(typeWriter, typingSpeed);
+        setTimeout(typewriter, speed);
       }
     }
   </script>
